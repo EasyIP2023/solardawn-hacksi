@@ -1,4 +1,4 @@
-AC_INIT(src/solardawn.c)
+AC_INIT(src/main.c)
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(SolarDawn, 0.1)
 AM_MAINTAINER_MODE
@@ -19,7 +19,6 @@ AC_OUTPUT([
 Makefile
 macros/Makefile
 src/Makefile
-intl/Makefile
 po/Makefile.in
 pixmaps/Makefile
 doc/Makefile

@@ -1,7 +1,14 @@
 solardawnapp_resources = gnome.compile_resources('solardawnapp_resources',
-  'ui_files/solardawn.gresource.xml',
+  'solardawnapp.gresource.xml',
   source_dir: '.')
 
+solardawnapp_schemas = gnome.compile_schemas()
+
 executable('solardawnapp',
-  'solardawnapp.c', 'solardawnappwin.c', 'main.c', solardawnapp_resources,
+  'main.c',
+  'solardawnapp.c',
+  'solardawnappwin.c',
+  'solardawnappprefs.c',
+  solardawnapp_resources,
+  solardawnapp_schemas,
   dependencies: libgtk_dep)

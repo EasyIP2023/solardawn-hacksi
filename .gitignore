@@ -4,7 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore Object files and executable in src/ui
+# Ignore Object files in src/ui
 /src/ui/*.o
 /src/ui/solardawnapp
 /src/ui/resources.c
+/src/ui/org.gtk.solardawnapp.gschema.valid
+/src/ui/gschemas.compiled

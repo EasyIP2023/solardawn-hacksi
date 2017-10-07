@@ -53,27 +53,9 @@ static void solardawn_app_activate (GApplication *app) {
   gtk_window_present (GTK_WINDOW (win));
 }
 
-static void solardawn_app_open (GApplication *app, GFile **files, gint n_files, const gchar *hint) {
-  GList *windows;
-  SolarDawnAppWindow *win;
-  int i;
-
-  windows = gtk_application_get_windows (GTK_APPLICATION (app));
-  if (windows)
-    win = SOLARDAWN_APP_WINDOW (windows->data);
-  else
-    win = solardawn_app_window_new (SOLARDAWN_APP (app));
-
-  for (i = 0; i < n_files; i++)
-    solardawn_app_window_open (win, files[i]);
-
-  gtk_window_present (GTK_WINDOW (win));
-}
-
 static void solardawn_app_class_init (SolarDawnAppClass *class) {
   G_APPLICATION_CLASS (class)->startup = solardawn_app_startup;
   G_APPLICATION_CLASS (class)->activate = solardawn_app_activate;
-  G_APPLICATION_CLASS (class)->open = solardawn_app_open;
 }
 
 SolarDawnApp *solardawn_app_new (void) {

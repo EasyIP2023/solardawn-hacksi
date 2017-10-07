@@ -9,7 +9,6 @@
 G_DECLARE_FINAL_TYPE (SolarDawnAppWindow, solardawn_app_window, SOLARDAWN, APP_WINDOW, GtkApplicationWindow)
 
 SolarDawnAppWindow *solardawn_app_window_new  (SolarDawnApp       *app);
-void                solardawn_app_window_open (SolarDawnAppWindow *win,
-                                               GFile              *file);
+void                solardawn_app_window_open (SolarDawnAppWindow *win);
 
 #endif

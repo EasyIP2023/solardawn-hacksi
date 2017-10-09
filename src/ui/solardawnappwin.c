@@ -83,7 +83,12 @@ static void solardawn_app_window_init (SolarDawnAppWindow *win) {
 
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
+
+  solardawn_app_window_update_labels(win);
+
   priv->settings = g_settings_new ("org.gtk.solardawnapp");
+
+  g_settings_bind (priv->settings, "transition", priv->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
 }
 
 static void solardawn_app_window_dispose (GObject *object) {
@@ -115,7 +120,7 @@ SolarDawnAppWindow *solardawn_app_window_new (SolarDawnApp *app) {
   return g_object_new (SOLARDAWN_APP_WINDOW_TYPE, "application", app, NULL);
 }
 
-void solardawn_app_window_open (SolarDawnAppWindow *win) {
+void solardawn_app_window_update_labels (SolarDawnAppWindow *win) {
   update_watt_hours(win);
   update_watts(win);
   update_amount_produced(win);

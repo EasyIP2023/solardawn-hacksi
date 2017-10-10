@@ -1,8 +1,8 @@
 #include <gtk/gtk.h>
-#include <stdlib.h>
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
+#include "../hardware/hardwaretest.h"
 
 struct _SolarDawnAppWindow {
   GtkApplicationWindow parent;
@@ -22,60 +22,75 @@ struct _SolarDawnAppWindowPrivate {
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW);
 
-static void update_watt_hours(SolarDawnAppWindow *win) {
+SolarDawnAppWindow *win;
+
+static void update_watt_hours (double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *watt_hours;
 
   priv = solardawn_app_window_get_instance_private (win);
 
-  watt_hours = g_strdup_printf ("%f watt/hours", rand());
+  watt_hours = g_strdup_printf ("%f watt/hours", value);
   gtk_label_set_text (GTK_LABEL (priv->watt_hours), watt_hours);
 
   g_free (watt_hours);
 }
 
-static void update_watts(SolarDawnAppWindow *win) {
+static void update_watts (double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *watts;
 
   priv = solardawn_app_window_get_instance_private (win);
 
-  watts = g_strdup_printf ("%f watts", rand());
+  watts = g_strdup_printf ("%f watts", value);
   gtk_label_set_text (GTK_LABEL (priv->watts), watts);
   g_free (watts);
 }
 
-static void update_amount_produced(SolarDawnAppWindow *win) {
+static void update_amount_produced (double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *amount_produced;
 
   priv = solardawn_app_window_get_instance_private (win);
 
-  amount_produced = g_strdup_printf ("%f watts", rand());
+  amount_produced = g_strdup_printf ("%f watts", value);
   gtk_label_set_text (GTK_LABEL (priv->amount_produced), amount_produced);
   g_free (amount_produced);
 }
 
-static void update_amount_used(SolarDawnAppWindow *win) {
+static void update_amount_used (double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *amount_used;
 
   priv = solardawn_app_window_get_instance_private (win);
 
-  amount_used = g_strdup_printf ("%f watts", rand());
+  amount_used = g_strdup_printf ("%f watts", value);
   gtk_label_set_text (GTK_LABEL (priv->amount_used), amount_used);
   g_free (amount_used);
 }
 
-static void update_total_power(SolarDawnAppWindow *win) {
+static void update_total_power (double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *total_power;
 
   priv = solardawn_app_window_get_instance_private (win);
 
-  total_power = g_strdup_printf ("%f watts", rand());
+  total_power = g_strdup_printf ("%f watts", value);
   gtk_label_set_text (GTK_LABEL (priv->total_power), total_power);
   g_free (total_power);
+}
+
+
+static void set_solardawn_app_window (SolarDawnAppWindow *window) {
+  win = window;
+}
+
+static void update_window_labels () {
+  update_amount_produced(return_amount_produced());
+  update_amount_used(return_amount_used());
+  update_total_power(return_total_power());
+  update_watt_hours(return_watt_hours());
+  update_watts(return_watts());
 }
 
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
@@ -84,11 +99,13 @@ static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
 
-  solardawn_app_window_update_labels(win);
+  /* Globally set the window */
+  set_solardawn_app_window(win);
 
   priv->settings = g_settings_new ("org.gtk.solardawnapp");
 
   g_settings_bind (priv->settings, "transition", priv->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
+  update_window_labels();
 }
 
 static void solardawn_app_window_dispose (GObject *object) {
@@ -118,12 +135,4 @@ static void solardawn_app_window_class_init (SolarDawnAppWindowClass *class) {
 
 SolarDawnAppWindow *solardawn_app_window_new (SolarDawnApp *app) {
   return g_object_new (SOLARDAWN_APP_WINDOW_TYPE, "application", app, NULL);
-}
-
-void solardawn_app_window_update_labels (SolarDawnAppWindow *win) {
-  update_watt_hours(win);
-  update_watts(win);
-  update_amount_produced(win);
-  update_amount_used(win);
-  update_total_power(win);
 }

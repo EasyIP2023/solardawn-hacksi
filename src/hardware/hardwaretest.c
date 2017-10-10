@@ -27,27 +27,24 @@
 
 #include "hardwaretest.h"
 
+double value;
+
 double return_watts () {
-  double value = rand() / (double)RAND_MAX;
-  return value;
+  return value = rand() / (double)RAND_MAX;
 }
 
 double return_amount_used () {
-  double value = rand() / (double)RAND_MAX;
-  return value;
+  return value = rand() / (double)RAND_MAX;
 }
 
 double return_amount_produced () {
-  double value = rand() / (double)RAND_MAX;
-  return value;
+  return value = rand() / (double)RAND_MAX;
 }
 
 double return_total_power () {
-  double value = rand() / (double)RAND_MAX;
-  return value;
+  return value = rand() / (double)RAND_MAX;
 }
 
 double return_watt_hours () {
-  double value = rand() / (double)RAND_MAX;
-  return value;
+  return value = rand() / (double)RAND_MAX;
 }

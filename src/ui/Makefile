@@ -25,4 +25,4 @@ resources.c: solardawnapp.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --sour
 	$(CC) -c -o $(@F) $(CFLAGS) $<
 
 solardawnapp: $(OBJS) gschemas.compiled
-	$(CC) -c -o $(@F) $(OBJS) $(LIBS)
+	$(CC) -pthread -c -o $(@F) $(OBJS) $(LIBS)

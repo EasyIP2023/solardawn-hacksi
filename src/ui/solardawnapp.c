@@ -77,7 +77,7 @@ static void solardawn_app_activate (GApplication *app) {
 }
 
 static void solardawn_app_class_init (SolarDawnAppClass *class) {
-  G_APPLICATION_CLASS (class)->startup = solardawn_app_startup;
+  G_APPLICATION_CLASS (class)->startup  = solardawn_app_startup;
   G_APPLICATION_CLASS (class)->activate = solardawn_app_activate;
 }
 

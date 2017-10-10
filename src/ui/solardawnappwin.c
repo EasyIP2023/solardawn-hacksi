@@ -22,6 +22,8 @@
  */
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
+#include <pthread.h>
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
@@ -108,12 +110,67 @@ static void set_solardawn_app_window (SolarDawnAppWindow *window) {
   win = window;
 }
 
-static void update_window_labels () {
-  update_amount_produced(return_amount_produced());
-  update_amount_used(return_amount_used());
-  update_total_power(return_total_power());
-  update_watt_hours(return_watt_hours());
-  update_watts(return_watts());
+void *update_amount_produced_label () {
+  while (1) {
+    update_amount_produced(return_amount_produced());
+    sleep(4);
+  }
+}
+
+void *update_amount_used_label () {
+  while (1) {
+    update_amount_used(return_amount_used());
+    sleep(1);
+  }
+}
+
+void *update_watt_hours_label () {
+  while (1) {
+    update_watt_hours(return_watt_hours());
+    sleep(2);
+  }
+}
+
+void *update_watts_label () {
+  while (1) {
+    update_watts(return_watts());
+    sleep(5);
+  }
+}
+
+void *update_total_power_label () {
+  while (1) {
+    update_total_power(return_total_power());
+    sleep(5);
+  }
+}
+
+static void update_labels_with_threads() {
+  pthread_t thread;
+  if (pthread_create(&thread, NULL, update_amount_produced_label, NULL) != 0) {
+    perror("pthread_create failed");
+    exit(1);
+  }
+
+  if (pthread_create(&thread, NULL, update_amount_used_label, NULL) != 0) {
+    perror("pthread_create failed");
+    exit(1);
+  }
+
+  if (pthread_create(&thread, NULL, update_watt_hours_label, NULL) != 0) {
+    perror("pthread_create failed");
+    exit(1);
+  }
+
+  if (pthread_create(&thread, NULL, update_watts_label, NULL) != 0) {
+    perror("pthread_create failed");
+    exit(1);
+  }
+
+  if (pthread_create(&thread, NULL, update_total_power_label, NULL) != 0) {
+    perror("pthread_create failed");
+    exit(1);
+  }
 }
 
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
@@ -128,7 +185,9 @@ static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   priv->settings = g_settings_new ("org.gtk.solardawnapp");
 
   g_settings_bind (priv->settings, "transition", priv->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
-  update_window_labels();
+
+  update_labels_with_threads();
+
 }
 
 static void solardawn_app_window_dispose (GObject *object) {

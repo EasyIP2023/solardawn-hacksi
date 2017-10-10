@@ -1,7 +1,9 @@
-#include <solardawn.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "ui/solardawnappinit.h"
 
 int main() {
-  init_net();
-  init_ui();
-  init_hardware();
+  init_gui();
+  return 0;
 }

@@ -145,7 +145,7 @@ void *update_total_power_label () {
   }
 }
 
-static void update_labels_with_threads() {
+static void update_labels_with_threads () {
   pthread_t thread;
   if (pthread_create(&thread, NULL, update_amount_produced_label, NULL) != 0) {
     perror("pthread_create failed");

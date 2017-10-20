@@ -47,9 +47,7 @@ struct _SolarDawnAppWindowPrivate {
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW);
 
-SolarDawnAppWindow *win;
-
-static void update_watt_hours (double value) {
+static void update_watt_hours (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *watt_hours;
 
@@ -61,7 +59,7 @@ static void update_watt_hours (double value) {
   g_free (watt_hours);
 }
 
-static void update_watts (double value) {
+static void update_watts (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *watts;
 
@@ -72,7 +70,7 @@ static void update_watts (double value) {
   g_free (watts);
 }
 
-static void update_amount_produced (double value) {
+static void update_amount_produced (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *amount_produced;
 
@@ -83,7 +81,7 @@ static void update_amount_produced (double value) {
   g_free (amount_produced);
 }
 
-static void update_amount_used (double value) {
+static void update_amount_used (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *amount_used;
 
@@ -94,7 +92,7 @@ static void update_amount_used (double value) {
   g_free (amount_used);
 }
 
-static void update_total_power (double value) {
+static void update_total_power (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *total_power;
 
@@ -105,69 +103,74 @@ static void update_total_power (double value) {
   g_free (total_power);
 }
 
+void *update_amount_produced_label (void *win) {
+  SolarDawnAppWindow *window = (SolarDawnAppWindow *)win;
 
-static void set_solardawn_app_window (SolarDawnAppWindow *window) {
-  win = window;
-}
-
-void *update_amount_produced_label () {
   while (1) {
-    update_amount_produced(return_amount_produced());
+    update_amount_produced(window, return_amount_produced());
     sleep(4);
   }
 }
 
-void *update_amount_used_label () {
+void *update_amount_used_label (void *win) {
+  SolarDawnAppWindow *window = (SolarDawnAppWindow *)win;
+
   while (1) {
-    update_amount_used(return_amount_used());
+    update_amount_used(window, return_amount_used());
     sleep(1);
   }
 }
 
-void *update_watt_hours_label () {
+void *update_watt_hours_label (void *win) {
+  SolarDawnAppWindow *window = (SolarDawnAppWindow *)win;
+
   while (1) {
-    update_watt_hours(return_watt_hours());
+    update_watt_hours(window, return_watt_hours());
     sleep(2);
   }
 }
 
-void *update_watts_label () {
+void *update_watts_label (void *win) {
+  SolarDawnAppWindow *window = (SolarDawnAppWindow *)win;
+
   while (1) {
-    update_watts(return_watts());
+    update_watts(window, return_watts());
     sleep(5);
   }
 }
 
-void *update_total_power_label () {
+void *update_total_power_label (void *win) {
+  SolarDawnAppWindow *window = (SolarDawnAppWindow *)win;
+
   while (1) {
-    update_total_power(return_total_power());
+    update_total_power(window, return_total_power());
     sleep(5);
   }
 }
 
-static void update_labels_with_threads () {
+static void update_labels_with_threads (SolarDawnAppWindow *win) {
   pthread_t thread;
-  if (pthread_create(&thread, NULL, update_amount_produced_label, NULL) != 0) {
+  if (pthread_create(&thread, NULL, update_amount_produced_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_amount_used_label, NULL) != 0) {
+  if (pthread_create(&thread, NULL, update_amount_used_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_watt_hours_label, NULL) != 0) {
+  if (pthread_create(&thread, NULL, update_watt_hours_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_watts_label, NULL) != 0) {
+  if (pthread_create(&thread, NULL, update_watts_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_total_power_label, NULL) != 0) {
+  if (pthread_create(&thread, NULL, update_total_power_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
@@ -179,15 +182,11 @@ static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
 
-  /* Globally set the window */
-  set_solardawn_app_window(win);
-
   priv->settings = g_settings_new ("org.gtk.solardawnapp");
 
   g_settings_bind (priv->settings, "transition", priv->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
 
-  update_labels_with_threads();
-
+  update_labels_with_threads(win);
 }
 
 static void solardawn_app_window_dispose (GObject *object) {

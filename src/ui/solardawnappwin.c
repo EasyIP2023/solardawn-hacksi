@@ -43,6 +43,9 @@ struct _SolarDawnAppWindowPrivate {
   GtkWidget *amount_produced;
   GtkWidget *amount_used;
   GtkWidget *total_power;
+  GtkWidget *see_power_button;
+  GtkWidget *buy_power_button;
+  GtkWidget *enter_info_button;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW);
@@ -176,6 +179,15 @@ static void update_labels_with_threads (SolarDawnAppWindow *win) {
   }
 }
 
+/*
+void enter_info_label_clicked_cb (SolarDawnAppWindow *win) {
+  SolarDawnAppWindowPrivate *priv;
+
+  priv = solardawn_app_window_get_instance_private (win);
+  if (gtk_button_clicked(priv->enter_info_button))
+
+}
+*/
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   SolarDawnAppWindowPrivate *priv;
 
@@ -212,6 +224,9 @@ static void solardawn_app_window_class_init (SolarDawnAppWindowClass *class) {
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, amount_used);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, amount_produced);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, total_power);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, see_power_button);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, buy_power_button);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, enter_info_button);
 }
 
 SolarDawnAppWindow *solardawn_app_window_new (SolarDawnApp *app) {

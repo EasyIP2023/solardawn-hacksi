@@ -1,72 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.20.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.8 -->
+  <requires lib="gtk+" version="3.8"/>
   <template class="SolarDawnAppWindow" parent="GtkApplicationWindow">
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">Solar Dawn</property>
-    <property name="default-width">1000</property>
-    <property name="default-height">800</property>
     <property name="window_position">center</property>
+    <property name="default_width">1000</property>
+    <property name="default_height">800</property>
     <property name="gravity">center</property>
     <child>
       <object class="GtkBox" id="content_box">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkHeaderBar" id="header">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel" id="lines_label">
-                <property name="visible">False</property>
-                <property name="label" translatable="yes">Lines:</property>
-              </object>
-              <packing>
-                <property name="pack-type">start</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="lines">
-                <property name="visible">False</property>
-              </object>
-              <packing>
-                <property name="pack-type">start</property>
-              </packing>
-            </child>
-            <child type="title">
-              <object class="GtkStackSwitcher" id="tabs">
-                <property name="visible">True</property>
-                <property name="stack">stack</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
           <object class="GtkBox" id="hbox">
-            <property name="expand">True</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkRevealer" id="sidebar">
-                <property name="visible">True</property>
-                <property name="transition-type">slide-right</property>
-                <child>
-                 <object class="GtkScrolledWindow" id="sidebar-sw">
-                   <property name="visible">True</property>
-                   <property name="hscrollbar-policy">never</property>
-                   <property name="vscrollbar-policy">automatic</property>
-                   <child>
-                     <object class="GtkListBox" id="words">
-                       <property name="visible">True</property>
-                       <property name="selection-mode">none</property>
-                     </object>
-                   </child>
-                 </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkStack" id="stack">
-                <property name="visible">True</property>
-              </object>
-            </child>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkGrid">
                 <property name="visible">True</property>
@@ -250,6 +201,11 @@
               </packing>
             </child>
           </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -257,28 +213,14 @@
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkButton">
-                <property name="label" translatable="yes">See Power</property>
-                <property name="name">see_power</property>
-                <property name="height_request">70</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="buy_power_button">
                 <property name="label" translatable="yes">Buy Power</property>
                 <property name="name">buy_power</property>
                 <property name="height_request">70</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="buy_power_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -287,13 +229,14 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="enter_info_button">
                 <property name="label" translatable="yes">Enter Information</property>
                 <property name="name">info</property>
                 <property name="height_request">70</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="enter_info_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -309,6 +252,9 @@
           </packing>
         </child>
       </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
     </child>
   </template>
 </interface>

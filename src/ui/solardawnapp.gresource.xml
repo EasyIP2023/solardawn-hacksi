@@ -2,7 +2,6 @@
 <gresources>
   <gresource prefix="/org/gtk/solardawnapp">
     <file preprocess="xml-stripblanks">window.ui</file>
-    <file preprocess="xml-stripblanks">app-menu.ui</file>
-    <file preprocess="xml-stripblanks">prefs.ui</file>
+    <file preprocess="xml-stripblanks">info.ui</file>
   </gresource>
 </gresources>

@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.20.1 -->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
-  <object class="GtkApplicationWindow">
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkBox">
+  <template class="SolarDawnAppEnterInfo" parent="GtkDialog">
+    <property name="title" translatable="yes">Enter Info</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="default_width">300</property>
+    <property name="default_height">300</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="vbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkHeaderBar">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="tooltip_text" translatable="yes">Enter Information</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="row_homogeneous">True</property>
@@ -297,8 +285,5 @@
         </child>
       </object>
     </child>
-    <child>
-      <placeholder/>
-    </child>
-  </object>
+  </template>
 </interface>

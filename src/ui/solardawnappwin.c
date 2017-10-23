@@ -27,28 +27,24 @@
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
+#include "solardawnappenterinfo.h"
 #include "../hardware/hardwaretest.h"
 
 struct _SolarDawnAppWindow {
   GtkApplicationWindow parent;
 };
 
-typedef struct _SolarDawnAppWindowPrivate SolarDawnAppWindowPrivate;
-
-struct _SolarDawnAppWindowPrivate {
-  GSettings *settings;
-  GtkWidget *stack;
+typedef struct _SolarDawnAppWindowPrivate {
   GtkWidget *watts;
   GtkWidget *watt_hours;
   GtkWidget *amount_produced;
   GtkWidget *amount_used;
   GtkWidget *total_power;
-  GtkWidget *see_power_button;
   GtkWidget *buy_power_button;
   GtkWidget *enter_info_button;
-};
+} SolarDawnAppWindowPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW);
+G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void update_watt_hours (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
@@ -113,6 +109,9 @@ void *update_amount_produced_label (void *win) {
     update_amount_produced(window, return_amount_produced());
     sleep(4);
   }
+
+  pthread_exit(NULL);
+  return NULL;
 }
 
 void *update_amount_used_label (void *win) {
@@ -122,6 +121,9 @@ void *update_amount_used_label (void *win) {
     update_amount_used(window, return_amount_used());
     sleep(1);
   }
+
+  pthread_exit(NULL);
+  return NULL;
 }
 
 void *update_watt_hours_label (void *win) {
@@ -131,6 +133,9 @@ void *update_watt_hours_label (void *win) {
     update_watt_hours(window, return_watt_hours());
     sleep(2);
   }
+
+  pthread_exit(NULL);
+  return NULL;
 }
 
 void *update_watts_label (void *win) {
@@ -140,6 +145,9 @@ void *update_watts_label (void *win) {
     update_watts(window, return_watts());
     sleep(5);
   }
+
+  pthread_exit(NULL);
+  return NULL;
 }
 
 void *update_total_power_label (void *win) {
@@ -149,6 +157,9 @@ void *update_total_power_label (void *win) {
     update_total_power(window, return_total_power());
     sleep(5);
   }
+
+  pthread_exit(NULL);
+  return NULL;
 }
 
 static void update_labels_with_threads (SolarDawnAppWindow *win) {
@@ -158,58 +169,52 @@ static void update_labels_with_threads (SolarDawnAppWindow *win) {
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_amount_used_label, (void *) win) != 0) {
+  pthread_t thread_two;
+  if (pthread_create(&thread_two, NULL, update_amount_used_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_watt_hours_label, (void *) win) != 0) {
+  pthread_t thread_three;
+  if (pthread_create(&thread_three, NULL, update_watt_hours_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_watts_label, (void *) win) != 0) {
+  pthread_t thread_four;
+  if (pthread_create(&thread_four, NULL, update_watts_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 
-  if (pthread_create(&thread, NULL, update_total_power_label, (void *) win) != 0) {
+  pthread_t thread_five;
+  if (pthread_create(&thread_five, NULL, update_total_power_label, (void *) win) != 0) {
     perror("pthread_create failed");
     exit(1);
   }
 }
 
-/*
-void enter_info_label_clicked_cb (SolarDawnAppWindow *win) {
-  SolarDawnAppWindowPrivate *priv;
-
-  priv = solardawn_app_window_get_instance_private (win);
-  if (gtk_button_clicked(priv->enter_info_button))
-
+static void buy_power_button_clicked (SolarDawnAppWindow *win) {
+  g_print ("Buy Power Button clicked\n");
 }
-*/
+
+static void enter_info_button_clicked (SolarDawnAppWindow *win) {
+  enter_info_activated(win);
+}
+
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   SolarDawnAppWindowPrivate *priv;
 
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
 
-  priv->settings = g_settings_new ("org.gtk.solardawnapp");
-
-  g_settings_bind (priv->settings, "transition", priv->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
+  g_signal_connect (priv->buy_power_button , "clicked", G_CALLBACK (buy_power_button_clicked ), win);
+  g_signal_connect (priv->enter_info_button, "clicked", G_CALLBACK (enter_info_button_clicked), win);
 
   update_labels_with_threads(win);
 }
 
 static void solardawn_app_window_dispose (GObject *object) {
-  SolarDawnAppWindow *win;
-  SolarDawnAppWindowPrivate *priv;
-
-  win = SOLARDAWN_APP_WINDOW (object);
-  priv = solardawn_app_window_get_instance_private (win);
-
-  g_clear_object (&priv->settings);
-
   G_OBJECT_CLASS (solardawn_app_window_parent_class)->dispose (object);
 }
 
@@ -218,13 +223,11 @@ static void solardawn_app_window_class_init (SolarDawnAppWindowClass *class) {
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/org/gtk/solardawnapp/window.ui");
 
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, stack);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, watt_hours);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, watts);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, amount_used);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, amount_produced);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, total_power);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, see_power_button);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, buy_power_button);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppWindow, enter_info_button);
 }

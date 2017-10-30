@@ -205,10 +205,17 @@ static void enter_info_button_clicked (SolarDawnAppWindow *win) {
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   SolarDawnAppWindowPrivate *priv;
 
+  GtkWindow *window = (GtkWindow*) win;
+  gint width  = 1000;
+  gint height = 800;
+
+  gtk_window_set_default_size (window, width, height);
+  gtk_window_set_position (window, GTK_WIN_POS_CENTER_ALWAYS);
+
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
 
-  g_signal_connect (priv->buy_power_button , "clicked", G_CALLBACK (buy_power_button_clicked ), win);
+  g_signal_connect (priv->buy_power_button , "clicked", G_CALLBACK (buy_power_button_clicked), win);
   g_signal_connect (priv->enter_info_button, "clicked", G_CALLBACK (enter_info_button_clicked), win);
 
   update_labels_with_threads(win);

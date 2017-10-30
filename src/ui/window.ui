@@ -5,10 +5,6 @@
   <template class="SolarDawnAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Solar Dawn</property>
-    <property name="window_position">center</property>
-    <property name="default_width">1000</property>
-    <property name="default_height">800</property>
-    <property name="gravity">center</property>
     <child>
       <object class="GtkBox" id="content_box">
         <property name="visible">True</property>

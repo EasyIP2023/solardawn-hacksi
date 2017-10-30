@@ -39,6 +39,17 @@ static void solardawn_app_enter_info_class_init (SolarDawnAppEnterInfoClass *cla
   G_OBJECT_CLASS (class)->dispose = solardawn_app_enter_info_dispose;
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/org/gtk/solardawnapp/info.ui");
+
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, first_name_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, last_name_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, phone_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, email_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, address_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, state_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, city_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, postal_code_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, update_db_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, sell_switch);
 }
 
 SolarDawnAppEnterInfo *solardawn_app_enter_info_new (SolarDawnAppWindow *win) {

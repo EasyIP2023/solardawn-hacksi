@@ -7,9 +7,10 @@ GLIB_COMPILE_SCHEMAS = $(shell $(PKGCONFIG) --variable=glib_compile_schemas gio-
 
 SRC = solardawnapp.c solardawnappwin.c solardawnappinit.c solardawnappenterinfo.c
 HARDWARE_OBJ = ../hardware/hardwaretest.o
+DATABASE_OBJ = ../database/solardawndb.o
 BUILT_SRC = resources.c
 
-OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ)
+OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ) $(DATABASE_OBJ)
 
 all: solardawnapp
 
@@ -20,4 +21,4 @@ resources.c: solardawnapp.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --sour
 	$(CC) -c -o $(@F) $(CFLAGS) $<
 
 solardawnapp: $(OBJS)
-	$(CC) -c -o $(@F) $(OBJS) $(LIBS)
+	$(CC) -c -o $(@F) $(OBJS) $(LIBS) -lsqlite3

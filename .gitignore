@@ -9,10 +9,12 @@
 
 # Ignore Object files in src/ui
 /src/ui/*.o
-/src/ui/solardawnapp
 /src/ui/resources.c
-/src/ui/org.gtk.solardawnapp.gschema.valid
-/src/ui/gschemas.compiled
 
 # Ignore Object files in src/hardware
 /src/hardware/*.o
+
+# Ignore Object files in src/database
+/src/database/*.o
+
+/src/solardawn.a

@@ -1,8 +1,32 @@
+/*
+ * Copyright (c) 2017, Vincent Davis
+ *
+ *----------------------------------------------------------------------
+ * This file is part of project solardawn.
+ *
+ *  solardawn is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  solardawn is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with solardawn; if not, write to the Free Software
+ *  Foundation, Inc.:
+ *      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *----------------------------------------------------------------------
+ */
+
 #include <gtk/gtk.h>
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
 #include "solardawnappenterinfo.h"
+#include "../database/solardawndb.h"
 
 struct _SolarDawnAppEnterInfo {
   GtkDialog parent;
@@ -38,6 +62,7 @@ static void solardawn_app_enter_info_dispose (GObject *object) {
 static void solardawn_app_enter_info_class_init (SolarDawnAppEnterInfoClass *class) {
   G_OBJECT_CLASS (class)->dispose = solardawn_app_enter_info_dispose;
 
+  //create_db ();
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/org/gtk/solardawnapp/info.ui");
 
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppEnterInfo, first_name_label);

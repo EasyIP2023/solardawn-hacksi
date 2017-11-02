@@ -20,19 +20,12 @@
  *      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *----------------------------------------------------------------------
  */
+ 
+#ifndef __SOLARDAWNDB_H
+#define __SOLARDAWNDB_H
 
-#ifndef __SOLARDAWNAPPENTERINFO_H
-#define __SOLARDAWNAPPENTERINFO_H
+#include <sqlite3.h>
 
-#include <gtk/gtk.h>
-#include "solardawnappwin.h"
-
-
-#define SOLARDAWN_APP_ENTER_INFO_TYPE (solardawn_app_enter_info_get_type ())
-G_DECLARE_FINAL_TYPE (SolarDawnAppEnterInfo, solardawn_app_enter_info, SOLARDAWN, APP_ENTER_INFO, GtkDialog)
-
-SolarDawnAppEnterInfo *solardawn_app_enter_info_new (SolarDawnAppWindow *win);
-
-void enter_info_activated (SolarDawnAppWindow *win);
+int create_db ();
 
 #endif

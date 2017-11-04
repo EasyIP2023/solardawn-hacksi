@@ -48,9 +48,6 @@ typedef struct _SolarDawnAppEnterInfoPrivate {
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppEnterInfo, solardawn_app_enter_info, GTK_TYPE_DIALOG)
 
 static void solardawn_app_enter_info_init (SolarDawnAppEnterInfo *info) {
-  SolarDawnAppEnterInfoPrivate *priv;
-
-  priv = solardawn_app_enter_info_get_instance_private (info);
   gtk_widget_init_template (GTK_WIDGET (info));
 }
 

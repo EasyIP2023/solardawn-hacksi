@@ -1,11 +1,11 @@
 CC ?= gcc
 PKGCONFIG = $(shell which pkg-config)
 CFLAGS = $(shell $(PKGCONFIG) --cflags gtk+-3.0)
-LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0)
+LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0) -lsqlite3
 GLIB_COMPILE_RESOURCES = $(shell $(PKGCONFIG) --variable=glib_compile_resources gio-2.0)
 GLIB_COMPILE_SCHEMAS = $(shell $(PKGCONFIG) --variable=glib_compile_schemas gio-2.0)
 
-SRC = solardawnapp.c solardawnappwin.c solardawnappinit.c solardawnappenterinfo.c
+SRC = solardawnapp.c solardawnappwin.c solardawnappinit.c solardawnappenterinfo.c solardawnappbuypower.c
 HARDWARE_OBJ = ../hardware/hardwaretest.o
 DATABASE_OBJ = ../database/solardawndb.o
 BUILT_SRC = resources.c
@@ -21,4 +21,4 @@ resources.c: solardawnapp.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --sour
 	$(CC) -c -o $(@F) $(CFLAGS) $<
 
 solardawnapp: $(OBJS)
-	$(CC) -c -o $(@F) $(OBJS) $(LIBS) -lsqlite3
+	$(CC) -c -o $(@F) $(OBJS) $(LIBS)

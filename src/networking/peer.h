@@ -21,17 +21,28 @@
  *----------------------------------------------------------------------
  */
 
-#ifndef __SOLARDAWNAPPENTERINFO_H
-#define __SOLARDAWNAPPENTERINFO_H
+#ifndef __PEER_H
+#define __PEER_H
 
-#include <gtk/gtk.h>
-#include "solardawnappwin.h"
+#include "data.h"
 
-#define SOLARDAWN_APP_ENTER_INFO_TYPE (solardawn_app_enter_info_get_type ())
-G_DECLARE_FINAL_TYPE (SolarDawnAppEnterInfo, solardawn_app_enter_info, SOLARDAWN, APP_ENTER_INFO, GtkDialog)
+#define WATCHER_PORT 8080
 
-SolarDawnAppEnterInfo *solardawn_app_enter_info_new (SolarDawnAppWindow *win);
+void create_room_request         ();
+void request_available_rooms     ();
+void get_room_info               ();
+void receive_packet              ();
+void leave_room_request          ();
 
-void enter_info_activated (SolarDawnAppWindow *win);
+void *read_input                 (void *ptr);
+void join_room_request           (int new_room_num);
+void send_message                (char *msg);
+void create_room_reply           (packet *pkt);
+void join_room_reply             (packet *pkt);
+void leave_room_reply            (packet *pkt);
+void user_connection_updates     (packet *pkt);
+void receive_available_producers (packet *pkt);
+void receive_power               (struct sockaddr_in *sender_addr, packet *pkt);
+void reply_to_ping               (struct sockaddr_in *sender_addr);
 
 #endif

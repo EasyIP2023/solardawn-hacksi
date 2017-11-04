@@ -4,7 +4,7 @@ CFLAGS = $(shell $(PKGCONFIG) --cflags gtk+-3.0)
 LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0)
 
 MAIN = main.c
-UI_OBJ = ui/solardawnapp.o ui/solardawnappinit.o ui/solardawnappwin.o ui/solardawnappenterinfo.o ui/resources.o
+UI_OBJ = ui/solardawnapp.o ui/solardawnappinit.o ui/solardawnappwin.o ui/solardawnappenterinfo.o ui/solardawnappbuypower.o ui/resources.o
 HARDWARE_OBJ = hardware/hardwaretest.o
 DATABASE_OBJ = database/solardawndb.o
 
@@ -26,4 +26,3 @@ clean:
 	rm -f hardware/*.o
 	rm -f database/*.o
 	rm -f solardawn
-	rm -f solardawn.a

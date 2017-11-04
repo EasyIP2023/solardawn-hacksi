@@ -28,6 +28,7 @@
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
 #include "solardawnappenterinfo.h"
+#include "solardawnappbuypower.h"
 #include "../hardware/hardwaretest.h"
 
 struct _SolarDawnAppWindow {
@@ -203,7 +204,7 @@ static void update_labels_with_threads (SolarDawnAppWindow *win) {
 }
 
 static void buy_power_button_clicked (SolarDawnAppWindow *win) {
-  g_print ("Buy Power Button clicked\n");
+  buy_power_activated(win);
 }
 
 static void enter_info_button_clicked (SolarDawnAppWindow *win) {

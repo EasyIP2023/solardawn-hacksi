@@ -13,8 +13,11 @@
 #include "peer.h"
 
 
+void receive_packet      ();
+void create_room_request ();
+void find_open_rooms     ();
+void *read_input (void *ptr);
 void display_err (char *error);
-int run ();
 
 int sock;
 struct sockaddr_in watcher_addr;
@@ -26,11 +29,12 @@ int peer_num = 0;
 pthread_mutex_t stdout_lock;
 pthread_mutex_t peer_list_lock;
 
-int main () {
-	run();
+int main(int argc, char **argv) {
+	run(argv[1]);
 	return 0;
 }
-int run () {
+
+int run (char *watcher_ip) {
 
 	if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 		display_err("creating socket.");
@@ -40,18 +44,18 @@ int run () {
 
 	short watcher_port = WATCHER_PORT;
 	short sock_port = (short) random();
-	char *watcher_ip;
 
 	sock_addr.sin_family = AF_INET;
 	sock_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	sock_addr.sin_port = htons(sock_port);
 
-	watcher_ip = "127.0.0.1";
 	watcher_addr.sin_family = AF_INET;
 	if (inet_aton(watcher_ip, &watcher_addr.sin_addr) == 0)
 		display_err("parsing watcher ip.");
 
 	watcher_addr.sin_port = htons(watcher_port);
+	create_room_request ();
+	find_open_rooms ();
 
 	/* create a thread to read user input */
 	pthread_t input_thread;

@@ -2,11 +2,6 @@
 <!-- Generated with glade 3.20.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <object class="GtkImage" id="show_watcher_image">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-justify-fill</property>
-  </object>
   <template class="SolarDawnAppBuyPower" parent="GtkDialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Buy Power</property>
@@ -35,35 +30,8 @@
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkHeaderBar">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">2</property>
-                <child>
-                  <object class="GtkToggleButton" id="show_watcher_toggle">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">show_watcher_image</property>
-                    <property name="always_show_image">True</property>
-                    <style>
-                      <class name="image-button"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="pack_type">end</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox" id="watcher_visibility">
                 <property name="can_focus">False</property>
                 <property name="homogeneous">True</property>
                 <child>
@@ -83,6 +51,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">False</property>
+                    <signal name="clicked" handler="connect_watcher_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

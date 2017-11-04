@@ -22,43 +22,51 @@
  */
 
 #include <gtk/gtk.h>
+#include <pthread.h>
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
 #include "solardawnappbuypower.h"
+#include "../networking/peer.h"
 
 struct _SolarDawnAppBuyPower {
   GtkDialog parent;
 };
 
 typedef struct _SolarDawnAppBuyPowerPrivate {
-  GtkWidget *show_watcher_toggle;
   GtkWidget *watcher_ip;
   GtkWidget *connect_watcher;
-  GtkWidget *watcher_visibility;
 } SolarDawnAppBuyPowerPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppBuyPower, solardawn_app_buy_power, GTK_TYPE_DIALOG)
 
-static void visbility_hide (SolarDawnAppBuyPower *power) {
+void *run_peer (void *power) {
+  SolarDawnAppBuyPower *powe = (SolarDawnAppBuyPower *)power;
   SolarDawnAppBuyPowerPrivate *priv;
 
-  priv = solardawn_app_buy_power_get_instance_private (power);
-  gtk_widget_set_visible(priv->watcher_visibility, FALSE);
-  gtk_widget_show(priv->watcher_visibility);
+  priv = solardawn_app_buy_power_get_instance_private (powe);
+  priv->watcher_ip = gtk_entry_new();
+  gchar *text = gtk_entry_get_text(GTK_ENTRY(priv->watcher_ip));
+
+  run ((char *) text);
 }
 
-static void visbility_show (SolarDawnAppBuyPower *power) {
-  SolarDawnAppBuyPowerPrivate *priv;
-  gboolean visible = 1;
+static void connect_watcher_clicked (SolarDawnAppBuyPower *power) {
 
-  priv = solardawn_app_buy_power_get_instance_private (power);
-  gtk_widget_set_visible(priv->watcher_visibility, TRUE);
-  gtk_widget_show(priv->watcher_visibility);
+  pthread_t thread;
+  if (pthread_create(&thread,NULL,run_peer,(void *) power) == -1)
+    perror("failed to create thread");
+
 }
 
 static void solardawn_app_buy_power_init (SolarDawnAppBuyPower *power) {
+  SolarDawnAppBuyPowerPrivate *priv;
+
+  priv = solardawn_app_buy_power_get_instance_private (power);
+
   gtk_widget_init_template (GTK_WIDGET (power));
+  g_signal_connect (priv->connect_watcher, "clicked", G_CALLBACK (connect_watcher_clicked), power);
+
 }
 
 static void solardawn_app_buy_power_dispose (GObject *object) {
@@ -71,10 +79,8 @@ static void solardawn_app_buy_power_class_init (SolarDawnAppBuyPowerClass *class
 
   gtk_widget_class_set_template_from_resource  (GTK_WIDGET_CLASS (class), "/org/gtk/solardawnapp/buypower.ui");
 
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppBuyPower, show_watcher_toggle);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppBuyPower, watcher_ip);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppBuyPower, connect_watcher);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (class), SolarDawnAppBuyPower, watcher_visibility);
 }
 
 SolarDawnAppBuyPower *solardawn_app_buy_power_new (SolarDawnAppWindow *win) {

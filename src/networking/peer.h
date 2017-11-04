@@ -28,21 +28,6 @@
 
 #define WATCHER_PORT 8080
 
-void create_room_request         ();
-void request_available_rooms     ();
-void get_room_info               ();
-void receive_packet              ();
-void leave_room_request          ();
-
-void *read_input                 (void *ptr);
-void join_room_request           (int new_room_num);
-void send_message                (char *msg);
-void create_room_reply           (packet *pkt);
-void join_room_reply             (packet *pkt);
-void leave_room_reply            (packet *pkt);
-void user_connection_updates     (packet *pkt);
-void receive_available_producers (packet *pkt);
-void receive_power               (struct sockaddr_in *sender_addr, packet *pkt);
-void reply_to_ping               (struct sockaddr_in *sender_addr);
+int run (char *watcher_ip);
 
 #endif

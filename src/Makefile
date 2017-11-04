@@ -7,13 +7,15 @@ MAIN = main.c
 UI_OBJ = ui/solardawnapp.o ui/solardawnappinit.o ui/solardawnappwin.o ui/solardawnappenterinfo.o ui/solardawnappbuypower.o ui/resources.o
 HARDWARE_OBJ = hardware/hardwaretest.o
 DATABASE_OBJ = database/solardawndb.o
+NETWORK_OBJ  = networking/peer.o
 
-OBJS =  $(UI_OBJ) $(HARDWARE_OBJ) $(DATABASE_OBJ)
+OBJS =  $(UI_OBJ) $(HARDWARE_OBJ) $(DATABASE_OBJ) $(NETWORK_OBJ)
 
 all: solardawnneeds solardawn
 
 solardawnneeds:
 	+$(MAKE) -C hardware/
+	+$(MAKE) -C networking/
 	+$(MAKE) -C database/
 	+$(MAKE) -C ui/
 
@@ -25,4 +27,5 @@ clean:
 	rm -f ui/*.o
 	rm -f hardware/*.o
 	rm -f database/*.o
+	rm -f networking/*.o
 	rm -f solardawn

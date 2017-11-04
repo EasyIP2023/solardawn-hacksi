@@ -17,4 +17,5 @@
 # Ignore Object files in src/database
 /src/database/*.o
 
-/src/solardawn.a
+# Ignore Object files in src/networking
+/src/networking/*.o

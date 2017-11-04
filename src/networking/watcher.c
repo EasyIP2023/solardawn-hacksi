@@ -50,6 +50,7 @@ int main () {
   run();
   return 0;
 }
+
 int run () {
 
   peers = NULL;
@@ -167,7 +168,7 @@ void *ping_output (void *ptr) {
       pthread_mutex_lock(&stdout_lock);
       perror("Checking ping responses");
       pthread_mutex_unlock(&stdout_lock);
-      delete_dead_peers();
+      //delete_dead_peers();
       send_pings();
       t=clock();
     }
@@ -254,11 +255,11 @@ void peer_create_room (unsigned int ip, short port) {
         break;
       }
     }
-    if (room_taken==0) {
+    if (room_taken == 0) {
       break;
     }
     else {
-      room_taken=0;
+      room_taken = 0;
     }
   }
 

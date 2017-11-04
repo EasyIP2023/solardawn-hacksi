@@ -8,9 +8,11 @@ GLIB_COMPILE_SCHEMAS = $(shell $(PKGCONFIG) --variable=glib_compile_schemas gio-
 SRC = solardawnapp.c solardawnappwin.c solardawnappinit.c solardawnappenterinfo.c solardawnappbuypower.c
 HARDWARE_OBJ = ../hardware/hardwaretest.o
 DATABASE_OBJ = ../database/solardawndb.o
+NETWORK_OBJ  = ../networking/peer.o
+
 BUILT_SRC = resources.c
 
-OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ) $(DATABASE_OBJ)
+OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ) $(DATABASE_OBJ) $(NETWORK_OBJ)
 
 all: solardawnapp
 

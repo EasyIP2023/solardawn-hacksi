@@ -1,3 +1,5 @@
+#include <time.h>
+
 typedef struct message_header_t {
 	char type;
 	char error;
@@ -5,8 +7,8 @@ typedef struct message_header_t {
 	unsigned int payload_length;
 	double watts;
 	double watt_hours;
-	int start_time;
-	int end_time;
+	time_t start_time;
+	time_t end_time;
 } message_header;
 
 typedef struct packet_t {

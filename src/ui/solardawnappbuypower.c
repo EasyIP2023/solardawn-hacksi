@@ -22,7 +22,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <pthread.h>
 
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
@@ -40,23 +39,10 @@ typedef struct _SolarDawnAppBuyPowerPrivate {
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppBuyPower, solardawn_app_buy_power, GTK_TYPE_DIALOG)
 
-void *run_peer (void *power) {
-  SolarDawnAppBuyPower *powe = (SolarDawnAppBuyPower *)power;
-  SolarDawnAppBuyPowerPrivate *priv;
-
-  priv = solardawn_app_buy_power_get_instance_private (powe);
-  priv->watcher_ip = gtk_entry_new();
-  gchar *text = gtk_entry_get_text(GTK_ENTRY(priv->watcher_ip));
-
-  run ((char *) text);
-}
-
 static void connect_watcher_clicked (SolarDawnAppBuyPower *power) {
-
-  pthread_t thread;
-  if (pthread_create(&thread,NULL,run_peer,(void *) power) == -1)
-    perror("failed to create thread");
-
+  SolarDawnAppBuyPowerPrivate *priv;
+  priv = solardawn_app_buy_power_get_instance_private (power);
+  run ((char *) priv->watcher_ip);
 }
 
 static void solardawn_app_buy_power_init (SolarDawnAppBuyPower *power) {

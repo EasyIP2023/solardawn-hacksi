@@ -47,7 +47,7 @@ void room_list(unsigned int ip, short port);
 void peer_list(unsigned int join_ip, short join_port, unsigned int room);
 void send_error(unsigned int ip, short port, char type, char error);
 int get_total_num_rooms();
-struct sockaddr_in get_sockaddr_in(unsigned int ip, short port);
+sockaddr_in get_sockaddr_in(unsigned int ip, short port);
 unsigned int get_ip(char* ip_port);
 short get_port(char* ip_port);
 void test_hash_table();
@@ -71,22 +71,18 @@ int main(int argc, char **argv){
     fprintf(stderr, "%s\n", "error - error creating ping_sock.");
     abort();
   }
-
   struct sockaddr_in self_addr;
-  self_addr.sin_family = AF_INET;
+  self_addr.sin_family = AF_INET; 
   self_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   self_addr.sin_port = htons(port);
-
   struct sockaddr_in ping_addr;
-  ping_addr.sin_family = AF_INET;
+  ping_addr.sin_family = AF_INET; 
   ping_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   ping_addr.sin_port = htons(port+1);
-
   if (bind(sock, (struct sockaddr *)&self_addr, sizeof(self_addr))) {
     fprintf(stderr, "%s\n", "error - error binding sock.");
     abort();
   }
-
   if (bind(ping_sock, (struct sockaddr *)&ping_addr, sizeof(ping_addr))) {
     fprintf(stderr, "%s\n", "error - error binding ping_sock.");
     abort();
@@ -112,12 +108,11 @@ int main(int argc, char **argv){
       pthread_mutex_lock(&stdout_lock);
       fprintf(stderr, "%s\n", "error - error receiving a packet, ignoring.");
       pthread_mutex_unlock(&stdout_lock);
-    }
-    else {
+    }else{
       unsigned int ip = sender_addr.sin_addr.s_addr;
       short port = htons(sender_addr.sin_port);
       switch (recv_pkt.header.type) {
-        case 'c':
+        case 'c': 
           peer_create_room(ip, port);
           break;
         case 'j':
@@ -140,7 +135,7 @@ int main(int argc, char **argv){
   return 0;
 }
 
-void *ping_input (void *ptr) {
+void * ping_input(void *ptr){
   socklen_t addrlen = 10;
   struct sockaddr_in sender_addr;
   packet recv_pkt;
@@ -153,12 +148,11 @@ void *ping_input (void *ptr) {
       pthread_mutex_lock(&stdout_lock);
       fprintf(stderr, "%s\n", "error - error receiving a packet, ignoring.");
       pthread_mutex_unlock(&stdout_lock);
-    }
-    else {
+    }else{
       unsigned int ip = sender_addr.sin_addr.s_addr;
       short port = htons(sender_addr.sin_port);
       switch (recv_pkt.header.type) {
-        case 'p':
+        case 'p': 
           mark_peer_alive(ip, port);
           break;
         default:
@@ -334,7 +328,7 @@ void peer_join(unsigned int ip, short port, unsigned int room){
     send_error(ip, port, 'j', 'e');
     return;
   }
-
+  
   //setup entry
   struct peer *new_peer;
   new_peer = (struct peer *)malloc(sizeof(struct peer));
@@ -342,7 +336,7 @@ void peer_join(unsigned int ip, short port, unsigned int room){
   sprintf(new_peer->ip_and_port, ip_and_port_format, ip, port);
   new_peer->room = room;
   new_peer->alive = 1;
-
+  
 
   HASH_FIND_STR(peers, (new_peer->ip_and_port), s);
   if(s!=NULL && s->room==room){
@@ -353,7 +347,7 @@ void peer_join(unsigned int ip, short port, unsigned int room){
     return;
   }
   int old_room_update = -1;
-  if (s==NULL) {
+  if(s==NULL){ 
     //peer not found - join
     pthread_mutex_lock(&peers_lock);
     HASH_ADD_STR( peers, ip_and_port, new_peer );
@@ -424,7 +418,7 @@ void room_list(unsigned int ip, short port){
   int max_occupants=0;
   unsigned int max_room_number =0;
   int num_rooms_indexed = 0;
-  for(s=peers; s != NULL; s=(struct peer *)s->hh.next){
+  for(s=peers; s != NULL; s=(peer *)s->hh.next){
     int room_index=-1;
     unsigned int a;
     for(a=0; a<sizeof(room_nums)/sizeof(room_nums[0]); a++){
@@ -497,20 +491,20 @@ void peer_list(unsigned int join_ip, short join_port, unsigned int room){
   //create payload for join and update replies
   struct peer *s;
   int num_in_room = 0;
-  for(s=peers; s != NULL; s=(struct peer *)s->hh.next){
+  for(s=peers; s != NULL; s=(peer *)s->hh.next){
     if(s->room==room){
       num_in_room = num_in_room+1;
     }
   }
   struct sockaddr_in list[num_in_room];
   int a = 0;
-  for(s=peers; s != NULL; s=(struct peer *)s->hh.next){
+  for(s=peers; s != NULL; s=(peer *)s->hh.next){
     if(s->room==room){
       unsigned int peer_ip = get_ip(s->ip_and_port);
       short peer_port = get_port(s->ip_and_port);
       struct sockaddr_in peer_info = get_sockaddr_in(peer_ip, peer_port);
-      struct sockaddr_in* peer_info_ptr = &peer_info;
-      memcpy((struct sockaddr_in*)&list[a], peer_info_ptr, sizeof(peer_info));
+      sockaddr_in* peer_info_ptr = &peer_info;
+      memcpy((sockaddr_in*)&list[a], peer_info_ptr, sizeof(peer_info));
       a=a+1;
     }
   }
@@ -520,11 +514,11 @@ void peer_list(unsigned int join_ip, short join_port, unsigned int room){
   update_pkt.header.error = '\0';
   update_pkt.header.payload_length = num_in_room * sizeof(struct sockaddr_in);
   memcpy(update_pkt.payload, list, num_in_room * sizeof(struct sockaddr_in));
-  for(s=peers; s != NULL; s=(struct peer *)s->hh.next){
+  for(s=peers; s != NULL; s=(peer *)s->hh.next){
     if(s->room==room){
       unsigned int peer_ip = get_ip(s->ip_and_port);
       short peer_port = get_port(s->ip_and_port);
-      if(join_port!=-1 && join_ip!=0 && peer_ip == join_ip && peer_port==join_port){
+      if(join_port!=-1 and join_ip!=0 and peer_ip == join_ip and peer_port==join_port){
         //send join
         packet join_pkt;
         join_pkt.header.type = 'j';
@@ -591,7 +585,7 @@ int get_total_num_rooms(){
 
   struct peer *s;
   unsigned int a;
-  for(s=peers; s != NULL; s=(struct peer *)s->hh.next){
+  for(s=peers; s != NULL; s=(peer *)s->hh.next){
     int found = 0;
     for(a=0; a<sizeof(rooms)/sizeof(rooms[0]); a++){
       if(rooms[a]==s->room && room_found[a]==1){
@@ -625,7 +619,7 @@ void send_error(unsigned int ip, short port, char type, char error){
   }
 }
 
-struct sockaddr_in get_sockaddr_in(unsigned int ip, short port){
+sockaddr_in get_sockaddr_in(unsigned int ip, short port){
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = ip;
@@ -663,6 +657,6 @@ short get_port(char* ip_port){
   char char_short[end-start+1];
   strncpy(char_short, ip_port+start, end-start);
   char_short[end-start] = '\0';
-
+  
   return (short)strtoul(char_short, NULL, 0);
 }

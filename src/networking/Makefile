@@ -1,5 +1,5 @@
-CC ?= gcc
-DEBUG_FLAGS = -g -O0 -DDEBUG -pthread -lm
+CC = g++
+DEBUG_FLAGS = -g -O0 -DDEBUG -pthread
 CFLAGS = $(DEBUG_FLAGS) -Wall
 RM = rm -f
 
@@ -10,6 +10,6 @@ tracker: tracker.o
 
 peer: peer.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
-
+	
 clean:
 	$(RM) *.o tracker peer

@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <netdb.h>
+#include <time.h>
 #include "message.h"
 
 int sock;
@@ -32,8 +33,6 @@ void leave_room_request();
 void send_message(char *msg);
 void request_available_rooms();
 void get_room_info();
-void receive_power(struct sockaddr_in *sender_addr, packet *pkt);
-void send_power ();
 
 void receive_packet();
 void create_room_reply(packet *pkt);
@@ -43,6 +42,8 @@ void user_connection_updates(packet *pkt);
 void receive_available_rooms(packet *pkt);
 void receive_message(struct sockaddr_in *sender_addr, packet *pkt);
 void reply_to_ping(struct sockaddr_in *sender_addr);
+void receive_power(struct sockaddr_in *sender_addr, packet *pkt);
+void send_power ();
 
 void setup_test_peers();
 
@@ -145,11 +146,11 @@ void * read_input(void *ptr) {
 			case 'm':
 				send_message(line + 3);
 				break;
+			case 'w':
+			  send_power();
+			  break;
 			case 'r':
 				request_available_rooms();
-				break;
-			case 'w':
-				send_power();
 				break;
 			case 'i':
 				get_room_info();
@@ -196,11 +197,11 @@ void receive_packet() {
 			case 'r':
 				receive_available_rooms(&pkt);
 				break;
-			case 'w':
-				receive_power(&sender_addr, &pkt);
-				break;
 			case 'm':
 				receive_message(&sender_addr, &pkt);
+				break;
+			case 'w':
+		    receive_power(&sender_addr, &pkt);
 				break;
 			case 'p':
 				reply_to_ping(&sender_addr);
@@ -290,62 +291,6 @@ void send_message(char *msg) {
 		}
 	}
 	pthread_mutex_unlock(&peer_list_lock);
-}
-
-void send_power () {
-	time_t rawtime;
-	time (&rawtime);
-
-	// format packet
-	packet pkt;
-	pkt.header.type = 'w';
-	pkt.header.error = '\0';
-	pkt.header.room  = room_num;
-	pkt.header.watts = 2342.13;
-	pkt.header.watt_hours = 52.2314;
-	pkt.header.start_time = rawtime;
-	pkt.header.end_time   = rawtime * rawtime;
-	pkt.header.payload_length = sizeof(pkt);
-
-	// send packet to every peer
-	int i;
-	int status;
-	pthread_mutex_lock(&peer_list_lock);
-	for (i = 0; i < peer_num; i++) {
-		status = sendto(sock, &pkt, sizeof(pkt.header) + pkt.header.payload_length, 0, (struct sockaddr *)&(peer_list[i]), sizeof(struct sockaddr_in));
-		if (status == -1) {
-			pthread_mutex_lock(&stdout_lock);
-			fprintf(stderr, "%s %d\n", "error - error sending packet to peer", i);
-			pthread_mutex_unlock(&stdout_lock);
-		}
-	}
-	pthread_mutex_unlock(&peer_list_lock);
-}
-
-
-void receive_power(struct sockaddr_in *sender_addr, packet *pkt) {
-	// fetch sender information
-	char *sender_ip = inet_ntoa(sender_addr->sin_addr);
-	short sender_port = htons(sender_addr->sin_port);
-
-	// display message in stdout if the message is from the chatroom that peer is in
-	if (pkt->header.room == room_num) {
-		pthread_mutex_lock(&stdout_lock);
-		printf("%s:%d - %s\n", sender_ip, sender_port, pkt->payload);
-		printf("Watts: %f\n", pkt->header.watts);
-		printf("Watt Hours: %f\n", pkt->header.watt_hours);
-		printf("Start Time: %lu\n", pkt->header.start_time);
-		printf("End Time: %lu\n", pkt->header.end_time);
-		switch (fork()) {
-			case -1:
-				perror("fork failed");
-			case 0:
-				execlp("bash","bash",NULL);
-			default:
-				puts("in parent");
-		}
-		pthread_mutex_unlock(&stdout_lock);
-	}
 }
 
 void request_available_rooms() {
@@ -477,6 +422,64 @@ void leave_room_reply(packet *pkt) {
 	pthread_mutex_lock(&stdout_lock);
 	printf("%s\n", "you have left the chatroom.");
 	pthread_mutex_unlock(&stdout_lock);
+}
+
+void send_power () {
+	time_t rawtime;
+	time (&rawtime);
+
+	// format packet
+	packet pkt;
+	pkt.header.type = 'w';
+	pkt.header.error = '\0';
+	pkt.header.room  = room_num;
+	pkt.header.watts = 2342.13;
+	pkt.header.watt_hours = 52.2314;
+	pkt.header.start_time = rawtime;
+	pkt.header.end_time   = rawtime * rawtime;
+	pkt.header.payload_length = sizeof(pkt);
+
+	// send packet to every peer
+	int i;
+	int status;
+	pthread_mutex_lock(&peer_list_lock);
+	for (i = 0; i < peer_num; i++) {
+		status = sendto(sock, &pkt, sizeof(pkt.header) + pkt.header.payload_length, 0, (struct sockaddr *)&(peer_list[i]), sizeof(struct sockaddr_in));
+		if (status == -1) {
+			pthread_mutex_lock(&stdout_lock);
+			fprintf(stderr, "%s %d\n", "error - error sending packet to peer", i);
+			pthread_mutex_unlock(&stdout_lock);
+		}
+	}
+	pthread_mutex_unlock(&peer_list_lock);
+}
+
+
+void receive_power(struct sockaddr_in *sender_addr, packet *pkt) {
+	// fetch sender information
+	char *sender_ip = inet_ntoa(sender_addr->sin_addr);
+	short sender_port = htons(sender_addr->sin_port);
+
+	// display message in stdout if the message is from the chatroom that peer is in
+	if (pkt->header.room == room_num) {
+		pthread_mutex_lock(&stdout_lock);
+		printf("%s:%d - %s\n", sender_ip, sender_port, pkt->payload);
+		printf("Watts: %f\n", pkt->header.watts);
+		printf("Watt Hours: %f\n", pkt->header.watt_hours);
+		printf("Start Time: %lu\n", pkt->header.start_time);
+		printf("End Time: %lu\n", pkt->header.end_time);
+		/*
+		switch (fork()) {
+			case -1:
+				perror("fork failed");
+			case 0:
+				execlp("bash","bash",NULL);
+			default:
+				puts("in parent");
+		}
+		*/
+		pthread_mutex_unlock(&stdout_lock);
+	}
 }
 
 void user_connection_updates(packet *pkt) {

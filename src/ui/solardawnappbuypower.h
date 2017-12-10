@@ -21,10 +21,17 @@
  *----------------------------------------------------------------------
  */
 
+#ifndef __SOLARDAWNAPPBUYPOWER_H
+#define __SOLARDAWNAPPBUYPOWER_H
+
 #include <gtk/gtk.h>
+#include "solardawnappwin.h"
 
-#include "solardawnapp.h"
+#define SOLARDAWN_APP_BUY_POWER_TYPE (solardawn_app_buy_power_get_type ())
+G_DECLARE_FINAL_TYPE (SolarDawnAppBuyPower, solardawn_app_buy_power, SOLARDAWN, APP_BUY_POWER, GtkDialog)
 
-int init_gui() {
-  return g_application_run (G_APPLICATION (solardawn_app_new ()), 0, NULL);
-}
+SolarDawnAppBuyPower *solardawn_app_buy_power_new (SolarDawnAppWindow *win);
+
+void buy_power_activated (SolarDawnAppWindow *win);
+
+#endif

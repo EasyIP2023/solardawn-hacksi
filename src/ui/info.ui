@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.20.1 -->
 <interface>
+  <requires lib="gtk+" version="3.10"/>
   <template class="SolarDawnAppEnterInfo" parent="GtkDialog">
     <property name="title" translatable="yes">Enter Info</property>
     <property name="resizable">False</property>
@@ -37,7 +38,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="first_name_label1">
+              <object class="GtkEntry" id="first_name_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -65,7 +66,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="last_name_label1">
+              <object class="GtkEntry" id="last_name_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -93,7 +94,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="phone_label1">
+              <object class="GtkEntry" id="phone_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -121,7 +122,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="email_label1">
+              <object class="GtkEntry" id="email_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -147,7 +148,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="address_label1">
+              <object class="GtkEntry" id="address_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -173,7 +174,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="state_label1">
+              <object class="GtkEntry" id="state_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -199,7 +200,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="city_label1">
+              <object class="GtkEntry" id="city_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -225,7 +226,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="postal_code_label1">
+              <object class="GtkEntry" id="postal_code_label">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -235,7 +236,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="update_db_label1">
+              <object class="GtkButton" id="update_db_label">
                 <property name="label" translatable="yes">Update</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -264,7 +265,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSwitch" id="sell_switch1">
+              <object class="GtkSwitch" id="sell_switch">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>

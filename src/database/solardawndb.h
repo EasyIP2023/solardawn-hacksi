@@ -20,11 +20,12 @@
  *      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *----------------------------------------------------------------------
  */
+ 
+#ifndef __SOLARDAWNDB_H
+#define __SOLARDAWNDB_H
 
-#include <gtk/gtk.h>
+#include <sqlite3.h>
 
-#include "solardawnapp.h"
+int create_db ();
 
-int init_gui() {
-  return g_application_run (G_APPLICATION (solardawn_app_new ()), 0, NULL);
-}
+#endif

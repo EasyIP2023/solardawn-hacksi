@@ -28,6 +28,7 @@
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
 #include "solardawnappenterinfo.h"
+#include "solardawnappbuypower.h"
 #include "../hardware/hardwaretest.h"
 
 struct _SolarDawnAppWindow {
@@ -46,6 +47,15 @@ typedef struct _SolarDawnAppWindowPrivate {
 
 G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppWindow, solardawn_app_window, GTK_TYPE_APPLICATION_WINDOW)
 
+static void set_window_size (SolarDawnAppWindow *win) {
+  GtkWindow *window = (GtkWindow*) win;
+  gint width  = 1000;
+  gint height = 800;
+
+  gtk_window_set_default_size (window, width, height);
+  gtk_window_set_position (window, GTK_WIN_POS_CENTER_ALWAYS);
+}
+
 static void update_watt_hours (SolarDawnAppWindow *win, double value) {
   SolarDawnAppWindowPrivate *priv;
   gchar *watt_hours;
@@ -54,7 +64,6 @@ static void update_watt_hours (SolarDawnAppWindow *win, double value) {
 
   watt_hours = g_strdup_printf ("%f watt/hours", value);
   gtk_label_set_text (GTK_LABEL (priv->watt_hours), watt_hours);
-
   g_free (watt_hours);
 }
 
@@ -195,7 +204,7 @@ static void update_labels_with_threads (SolarDawnAppWindow *win) {
 }
 
 static void buy_power_button_clicked (SolarDawnAppWindow *win) {
-  g_print ("Buy Power Button clicked\n");
+  buy_power_activated(win);
 }
 
 static void enter_info_button_clicked (SolarDawnAppWindow *win) {
@@ -205,10 +214,12 @@ static void enter_info_button_clicked (SolarDawnAppWindow *win) {
 static void solardawn_app_window_init (SolarDawnAppWindow *win) {
   SolarDawnAppWindowPrivate *priv;
 
+  set_window_size (win);
+
   priv = solardawn_app_window_get_instance_private (win);
   gtk_widget_init_template (GTK_WIDGET (win));
 
-  g_signal_connect (priv->buy_power_button , "clicked", G_CALLBACK (buy_power_button_clicked ), win);
+  g_signal_connect (priv->buy_power_button , "clicked", G_CALLBACK (buy_power_button_clicked), win);
   g_signal_connect (priv->enter_info_button, "clicked", G_CALLBACK (enter_info_button_clicked), win);
 
   update_labels_with_threads(win);

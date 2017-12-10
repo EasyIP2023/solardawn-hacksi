@@ -9,13 +9,12 @@ HARDWARE_OBJ = hardware/hardwaretest.o
 DATABASE_OBJ = database/solardawndb.o
 NETWORK_OBJ  = networking/peer.o
 
-OBJS =  $(UI_OBJ) $(HARDWARE_OBJ) $(DATABASE_OBJ) $(NETWORK_OBJ)
+OBJS =  $(UI_OBJ) $(HARDWARE_OBJ) $(DATABASE_OBJ)
 
 all: solardawnneeds solardawn
 
 solardawnneeds:
 	+$(MAKE) -C hardware/
-	+$(MAKE) -C networking/
 	+$(MAKE) -C database/
 	+$(MAKE) -C ui/
 

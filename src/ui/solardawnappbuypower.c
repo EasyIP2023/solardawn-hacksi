@@ -26,7 +26,6 @@
 #include "solardawnapp.h"
 #include "solardawnappwin.h"
 #include "solardawnappbuypower.h"
-#include "../networking/peer.h"
 
 struct _SolarDawnAppBuyPower {
   GtkDialog parent;
@@ -42,7 +41,6 @@ G_DEFINE_TYPE_WITH_PRIVATE(SolarDawnAppBuyPower, solardawn_app_buy_power, GTK_TY
 static void connect_watcher_clicked (SolarDawnAppBuyPower *power) {
   SolarDawnAppBuyPowerPrivate *priv;
   priv = solardawn_app_buy_power_get_instance_private (power);
-  run ((char *) priv->watcher_ip);
 }
 
 static void solardawn_app_buy_power_init (SolarDawnAppBuyPower *power) {

@@ -1,3 +1,5 @@
+/* https://github.com/bschmaltz/c-p2p-chat */
+
 #include <time.h>
 
 typedef struct message_header_t {

@@ -1,6 +1,9 @@
-# solardawn
+# solardawn first proto
 
-Open Source Project to allow people to buy and sell electricity to each other. This adaptation is designed to work with the raspberry pi zero. It follows a basic client server model using multiplex I/O with epoll (two thread and on temp thread to handle client connection), but for future use we plan on making it follow a peer-to-peer model, like [gtk-gnutella](https://github.com/gtk-gnutella/gtk-gnutella).
+# Depreciated!!!!
+This Repo will no longer be maintained it was used for hackSI a hackathon event hosted at SIU, but will no longer be in use. It currently acts as a record of the project progress.
+
+Open Source Project to allow people to buy and sell electricity to each other. This adaptation is designed to work with the raspberry pi zero. It follows a basic client server model, but for future use we plan on making it follow a peer-to-peer model, like [gtk-gnutella](https://github.com/gtk-gnutella/gtk-gnutella).
 Website and GoFundme
 
 * [Project Solar Dawn](https://project-solardawn.com)

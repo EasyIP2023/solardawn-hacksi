@@ -12,7 +12,7 @@ NETWORK_OBJ  = ../networking/peer.o
 
 BUILT_SRC = resources.c
 
-OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ) $(DATABASE_OBJ) $(NETWORK_OBJ)
+OBJS = $(BUILT_SRC:.c=.o) $(SRC:.c=.o) $(HARDWARE_OBJ) $(DATABASE_OBJ)
 
 all: solardawnapp
 
